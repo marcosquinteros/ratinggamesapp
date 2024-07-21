@@ -13,6 +13,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AnimatedGameCard, GameCard } from "./GameCard";
 import { Logo } from "./Logo";
 import { FontAwesome6 } from "@expo/vector-icons";
+import { Screen } from "./Screen";
 export function Main() {
   const [games, setGames] = useState([]);
   const insets = useSafeAreaInsets();
@@ -23,8 +24,7 @@ export function Main() {
   }, []);
 
   return (
-    <View className="bg-zinc-900" >
-
+    <Screen>
       {games.length === 0 ? (
         <View
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
@@ -40,6 +40,6 @@ export function Main() {
           )}
         />
       )}
-    </View>
+    </Screen>
   );
 }

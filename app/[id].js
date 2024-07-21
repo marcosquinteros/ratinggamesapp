@@ -1,14 +1,52 @@
-import { Link } from "expo-router";
-import { Text, View } from "react-native";
+import { Link, Stack } from "expo-router";
+import { ActivityIndicator, Image, ScrollView, Text, View } from "react-native";
 import { useLocalSearchParams } from "expo-router";
+import { Screen } from "../components/Screen";
+import { useEffect, useState } from "react";
+import { getGameDetails } from "../lib/metacritic";
+import { Score } from "../components/Score";
 export default function Detail() {
-    const {id} = useLocalSearchParams()
-    return (
-        <View className="flex-1 bg-zinc-900 justify-center items-center">
-            <View>
-                <Text className="text-white">Detalle del juego {id}</Text>
-                <Link className="text-blue-500" href='/'>Volver atras</Link>
+  const { id } = useLocalSearchParams();
+  const [gameInfo, setGameInfo] = useState(null);
+
+  useEffect(() => {
+    if (id) {
+      getGameDetails(id).then(setGameInfo);
+    }
+  });
+  return (
+    <Screen>
+      <Stack.Screen
+        options={{
+          headerStyle: { backgroundColor: "#ffee00" },
+          headerTintColor: "black",
+          headerLeft: () => {},
+          headerTitle: "Great game",
+        }}
+      />
+      <View>
+        {gameInfo === null ? (
+          <ActivityIndicator color={"#fff"} size={"large"} />
+        ) : (
+          <ScrollView>
+            <View className="flex-1 justify-center items-center">
+                <Image
+                    className="mb-4 rounded-lg"
+                    source={{uri: gameInfo.img}}
+                    style={{width: 214, height: 294}}
+                />
+            <Score score={gameInfo.score} maxScore={100}/>
+            <Text className="text-white font-bold mb-8 text-2xl">
+              {gameInfo.title}
+            </Text>
+            <Text className="text-white/70 mt-4 text-left mb-8 text-base">
+              {gameInfo.description}
+            </Text>
+
             </View>
-        </View>
-    )
+          </ScrollView>
+        )}
+      </View>
+    </Screen>
+  );
 }
